@@ -116,7 +116,8 @@ make db-down     # stop PostgreSQL (data kept)
 | At least two notification mechanisms | Persistent in-app notifications plus simulated email (stored and logged); both driven by domain events |
 | Complete incident history | Append-only audit table with actor, action, previous/new state, description and timestamp |
 | At least five search/filter criteria | Search, status, priority, category, service, SLA state, date range, duplicates and escalations |
-| At least two intelligent features | Auto-classification, duplicate detection, technician recommendations, SLA risk, escalation, suggested resolutions |
+| At least two intelligent features | Auto-classification, service suggestion, duplicate detection, technician recommendations, SLA risk, escalation, similar past fixes |
+| Innovation (from the brief's list) | Voice-based incident reporting (browser speech recognition) and a report form that fills in its own title, category and service |
 | Persistence | PostgreSQL 17 with Flyway migrations; Hibernate validates the schema |
 | Reports and dashboards | Role-scoped KPIs, trend, priority mix, service/category analysis, technician workload, SLA health |
 | Security | JWT, BCrypt, RBAC, ownership checks, validation, ProblemDetail errors, CORS allow-list |
@@ -179,12 +180,43 @@ heavily. The category and confidence are shown in the UI before submission; low-
 fall back to **Other** for manual triage. New categories introduced by an administrator become
 available without code changes.
 
+### Voice reporting (speech to text)
+
+The report form has a **Dictate the description** button. It uses the browser's built-in speech
+recognition (the Web Speech API), so there is no API key, no extra package and no backend change: the
+browser turns speech into text and the form adds each finished phrase to the description, showing the
+words as they are heard. It works in Chrome and Edge (which send the audio to Google's or Microsoft's
+speech service, so it needs internet) and the button is hidden in browsers without speech recognition,
+such as Firefox. Typing always works as well.
+
+### Self-filling report form
+
+About a second after the reporter stops typing or dictating, the form analyses the text by itself
+and fills in:
+
+- the **title**, from the first sentence of the description, if the title was left empty;
+- the **category**, from the auto-classifier above (only when it is at least 50% confident);
+- the **affected service**, from words in the report that match a service's name or description, plus
+  everyday words for the standard services (for example "mouse" or "printer" for End-User Computing,
+  "Outlook" for Email & Collaboration). No service is suggested when nothing matches or two tie.
+
+Each filled-in field shows its reason underneath, and anything the reporter types or picks is never
+overwritten. Impact and urgency stay the reporter's choice, because they drive the priority.
+
 ### Duplicate detection
 
 Recent incidents are compared using a token-overlap similarity over title and description, with a
 bonus when the affected service is the same. Matches above 30% are exposed as related incidents;
 strong matches are linked as possible duplicates and admins are notified. A suggested-resolution
 endpoint applies the same similarity approach to historical resolved incidents.
+
+### Similar past fixes
+
+The same similarity approach finds resolved incidents that look like the problem being reported.
+Technicians see their resolution notes on the incident page; reporters see up to three strong matches
+on the report form before they submit, so a known fix can solve the problem without a new ticket. The
+fix text is always shown, but the original incident's title and link only to people allowed to open
+it.
 
 ### Technician recommendations
 
@@ -252,7 +284,6 @@ SLA or Reports page.
 │   ├── TEST_CASES.md            # 60+ documented test scenarios
 │   ├── PROJECT_REPORT.md        # submission-ready report (Markdown)
 │   ├── I-ITSM_Project_Report.pdf # generated PDF report
-│   ├── DEMO_SCRIPT.md           # 15–20 minute demo/video plan
 │   └── screenshots/             # UI captures used in this README
 ├── docker-compose.yml           # postgres:17-alpine + healthcheck + volume
 ├── Makefile

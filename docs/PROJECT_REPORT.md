@@ -28,7 +28,8 @@ workflow.
 
 The system goes beyond a basic CRUD application with rule-based auto-classification, duplicate
 incident detection, smart technician recommendations, SLA warning/breach detection, automatic
-escalation and suggested resolutions from historical incidents. It was validated with 50 automated
+escalation, suggested resolutions from historical incidents, and voice-based reporting with a report
+form that fills in its own title, category and affected service. It was validated with 50 automated
 tests (including a real PostgreSQL Testcontainers integration test) and 60+ documented scenarios
 covering authorization, invalid input, lifecycle rules and boundary conditions.
 
@@ -305,7 +306,8 @@ complexity during development. The backend is stateless; the JWT carries identit
 - Dashboard for technicians and administrators with KPI cards, Recharts trend/donut/bar charts, SLA watch
   and the same “Waiting on you” prompt for incidents they reported.
 - Incident queue with search, five filters (status, priority, category, service, SLA state) and pagination.
-- Report form with live smart-triage analysis and duplicate preview.
+- Report form with voice dictation and live smart-triage analysis that fills in the title, category
+  and affected service, and shows possible duplicates and similar past fixes.
 - Incident detail with a six-step progress tracker, an “Is it working for you now?” card for the reporter,
   SLA clocks, metadata, duplicate warning, suggestions, comments/internal notes, audit timeline and
   role-specific actions. Dashboard, home and detail pages refresh themselves every 10–15 seconds.
@@ -586,11 +588,44 @@ SLA state is computed from deadlines and flags and is exposed in every incident 
 dashboard. Escalation levels increase over time for unacknowledged critical incidents, notifying
 administrators and adding audit entries.
 
-### 6.6 Suggested resolution
+### 6.6 Suggested resolution and similar past fixes
 
 Resolved incidents from the last 180 days are compared with the current incident using the same
 similarity engine. The top matches return the resolution notes, timestamps and match scores, giving
 technicians a starting point and improving organisational knowledge reuse.
+
+The same matching runs on the report form, before an incident exists. Reporters see up to three
+strong matches as *similar past fixes*, so a known fix can solve the problem without a new ticket.
+The fix text is always shown; the original incident's title and link are shown only to people who are
+allowed to open it, using the same `IncidentAccessPolicy` rule as duplicate detection.
+
+### 6.7 Voice reporting (speech to text)
+
+The description can be dictated with a **Dictate the description** button on the report form. It uses
+the browser's built-in speech recognition (the Web Speech API), so no API key, extra library or
+backend endpoint is needed. While the reporter speaks, the words being recognised are shown; each
+finished phrase is added to the description, starting with a capital letter after a full stop. The
+feature is wrapped in a small reusable hook (`useSpeechInput`) and a `VoiceInputButton` component,
+which hides itself in browsers without speech recognition, such as Firefox, so typing always remains
+available. Voice-based incident reporting is one of the innovation features suggested in the brief.
+
+### 6.8 Self-filling report form
+
+About a second after the reporter stops typing or dictating, the form calls the classification
+preview by itself and fills in three fields:
+
+- **Title:** taken from the first sentence of the description when the title is left empty, which
+  suits dictation.
+- **Category:** from the auto-classifier in 6.2, only when its confidence is at least 50%.
+- **Affected service:** from `ServiceSuggestionService`, which scores each service by the words of
+  its name and description that appear in the report, plus everyday words for the standard services
+  (for example "mouse" or "printer" for End-User Computing and "Outlook" for Email & Collaboration).
+  Title words count double. No service is suggested when nothing matches or two services tie,
+  because a wrong service would give a wrong criticality and therefore a wrong priority.
+
+Each filled-in field shows the reason under it, for example *"The report mentions 'mouse', which
+points to End-User Computing."* Anything the reporter types or picks is never overwritten, and impact
+and urgency remain the reporter's decision because they drive the priority score.
 
 ---
 
