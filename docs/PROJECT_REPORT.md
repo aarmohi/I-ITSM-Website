@@ -1,12 +1,17 @@
 # Intelligent IT Service Management & Incident Resolution System (I-ITSM)
 
-**Course:** CS F213 / MAC F212 Object-Oriented Programming  
+**Course:** MAC F212 Object-Oriented Programming  
 **Semester:** I, 2026–2027  
 **Project report:** implementation and design documentation
 
-> Team details (names, roll numbers and primary responsibilities) should be completed from the
-> submitted group before export. The technical content below is the report draft for the implemented
-> system.
+**Team:**
+
+| Name | ID |
+| --- | --- |
+| Srujan Mishrikotkar | 2025ADPS0139H |
+| Aarushi Mohindru | 2025ADPS0142H |
+| Atharv Kishor Suryawanshi | 2025ADPS0146H |
+| Sahithi Dasari | 2025ADPS2031H |
 
 ---
 
@@ -14,7 +19,7 @@
 
 I-ITSM is a full-stack ITSM platform that manages the complete lifecycle of an IT incident: report,
 classify, prioritize, assign, acknowledge, investigate, resolve, verify and close. It supports three
-user groups — employees, technicians and administrators — with role-specific experiences and secure
+user groups (employees, technicians and administrators) with role-specific experiences and secure
 JWT-based access. The backend applies object-oriented design through a state machine for lifecycle
 transitions, strategy objects for priority calculation and technician assignment, factories,
 repositories, domain events and an append-only audit trail. PostgreSQL stores the operational data
@@ -41,10 +46,9 @@ covering authorization, invalid input, lifecycle rules and boundary conditions.
 8. Technology stack and justification
 9. Testing and validation
 10. Demonstration workflows
-11. Evaluation rubric mapping
-12. Limitations and future work
-13. Conclusion
-14. Appendices
+11. Limitations and future work
+12. Conclusion
+13. Appendices
 
 ---
 
@@ -52,7 +56,7 @@ covering authorization, invalid input, lifecycle rules and boundary conditions.
 
 ### 1.1 Problem
 
-Large organisations depend on many IT services — payment platforms, identity providers, databases,
+Large organisations depend on many IT services, such as payment platforms, identity providers, databases,
 networks, storage and collaboration tools. When a service fails, the employee who notices it has no
 structured way to report the problem, the support team must manually triage a flood of reports, and
 managers lack timely visibility into service health and SLA performance. Common failures include:
@@ -69,9 +73,9 @@ managers lack timely visibility into service health and SLA performance. Common 
 
 | Stakeholder | Goals | Pain points addressed |
 | --- | --- | --- |
-| Employee / customer | Report an issue quickly, track progress, provide extra information, verify the fix and give feedback | Simple report form, live status, comments, feedback |
+| Employee/customer | Report an issue quickly, track progress, provide extra information, verify the fix and give feedback | Simple report form, live status, comments, feedback |
 | Technician | See assigned work, understand urgency, acknowledge, investigate, request information, resolve and manage workload | Personal queue, SLA clocks, internal notes, workload capacity |
-| Administrator / IT manager | Manage people and services, configure SLAs and assignment, monitor incidents, review reports and audit | User/catalogue/SLA/settings admin, dashboards, audit trail |
+| Administrator/IT manager | Manage people and services, configure SLAs and assignment, monitor incidents, review reports and audit | User/catalogue/SLA/settings admin, dashboards, audit trail |
 | Organisation | Reduce downtime, meet contractual targets, make evidence-based staffing decisions | Priority automation, SLA monitoring, workload and service analytics |
 
 ### 1.3 Existing challenges
@@ -262,7 +266,7 @@ flowchart LR
     A([Administrator]) --> SPA
     SPA -->|JSON + JWT| API[Spring Boot 4.1 REST API]
     API --> SEC[Security filter + RBAC]
-    API --> DOM[Incident / SLA / assignment domain]
+    API --> DOM[Incident/SLA/assignment domain]
     DOM --> DB[(PostgreSQL 17 Alpine)]
     DOM --> EV[Domain events]
     EV --> INAPP[In-app notifications]
@@ -300,7 +304,7 @@ complexity during development. The backend is stateless; the JWT carries identit
   progress bar and plain-language timing, and recently fixed requests with a “Rate the fix” prompt.
 - Dashboard for technicians and administrators with KPI cards, Recharts trend/donut/bar charts, SLA watch
   and the same “Waiting on you” prompt for incidents they reported.
-- Incident queue with search + six visible filters and pagination.
+- Incident queue with search, five filters (status, priority, category, service, SLA state) and pagination.
 - Report form with live smart-triage analysis and duplicate preview.
 - Incident detail with a six-step progress tracker, an “Is it working for you now?” card for the reporter,
   SLA clocks, metadata, duplicate warning, suggestions, comments/internal notes, audit timeline and
@@ -401,12 +405,12 @@ flowchart LR
       A([Administrator])
     end
     subgraph System
-      R[Register / login]
+      R[Register/login]
       C[Report incident]
       V[Track own incidents]
-      F[Verify / feedback]
+      F[Verify/feedback]
       Q[My queue]
-      W[Acknowledge / start / resolve]
+      W[Acknowledge/start/resolve]
       L[View workload]
       U[Manage users & skills]
       G[Configure services, categories, SLA]
@@ -536,7 +540,7 @@ audit records, notifications, breaches, escalation and feedback.
 
 ```text
 raw   = impact(1–4) × urgency(1–4) × business criticality(1–4)
-bonus = 0 / 1 / 3 / 6 / 10 for affected users <5 / ≥5 / ≥25 / ≥100 / ≥500
+bonus = 0/1/3/6/10 for affected users <5/≥5/≥25/≥100/≥500
 score = raw + bonus
 P1 ≥ 36 · P2 ≥ 18 · P3 ≥ 6 · P4 otherwise
 ```
@@ -549,8 +553,7 @@ recalculates SLA deadlines.
 ### 6.2 Auto-classification
 
 An active-category keyword map scores the title and description (title matches count double). The
-best category is returned with a confidence and rationale. For example, “VPN disconnects / Wi-Fi /
-DNS” classifies as Network, “password / SSO / MFA” as Authentication, and unmatched reports fall back
+best category is returned with a confidence and rationale. For example, “VPN disconnects/Wi-Fi/DNS” classifies as Network, “password/SSO/MFA” as Authentication, and unmatched reports fall back
 to Other for manual triage. New categories added by an administrator are immediately available to the
 classifier.
 
@@ -611,10 +614,9 @@ Implemented controls:
 - Optimistic locking; self-deactivation and last-admin guards; active-work deactivation guard.
 - Demo accounts and seeded passwords are clearly development-only.
 
-Limitations (documented for production): no refresh-token rotation/revocation, no rate limiting/
-account lockout, no HTTPS termination in the development setup, simulated email, no MFA, and audit
-rows are immutable by convention/API rather than by a database trigger. The report's future-work
-section lists these.
+Limitations (documented for production): no refresh-token rotation/revocation, no rate limiting/account lockout, no HTTPS termination in the development setup, simulated email, no MFA, and audit
+rows are immutable by convention/API rather than by a database trigger. Section 11 lists how these
+would be addressed.
 
 ---
 
@@ -624,7 +626,7 @@ section lists these.
 | --- | --- | --- | --- |
 | Language | Java | 21 target (JDK 25 used to build/test) | Strong typing, mature OOP ecosystem, Spring support |
 | Backend | Spring Boot | 4.1.2 | Web MVC, dependency injection, security, data access, scheduling |
-| Security | Spring Security + JJWT | 7.x / 0.12.6 | JWT authentication, BCrypt, role-based authorization |
+| Security | Spring Security + JJWT | 7.x/0.12.6 | JWT authentication, BCrypt, role-based authorization |
 | Persistence | Spring Data JPA + Hibernate | Boot-managed | Repository abstraction, derived queries, specifications, optimistic locking |
 | Migrations | Flyway | Boot-managed | Versioned schema evolution |
 | Database | PostgreSQL | 17 Alpine (Docker) | Relational integrity, partial indexes, timestamptz, mature tooling |
@@ -633,7 +635,7 @@ section lists these.
 | Language (UI) | TypeScript | 7.0 | Typed API contracts, safer refactors |
 | Routing | React Router | 7.x | Protected role-aware routes |
 | Charts | Recharts | 3.x | Responsive dashboards |
-| Testing | JUnit 6, AssertJ, Mockito, Testcontainers, Playwright | Boot-managed / current | Unit, integration, browser validation |
+| Testing | JUnit 6, AssertJ, Mockito, Testcontainers | Boot-managed | Unit and integration tests |
 | Infra | Docker Compose | current | Reproducible PostgreSQL with healthcheck/volume |
 
 ### 8.1 Why Java?
@@ -721,8 +723,8 @@ scale demands it. The existing strategy/state/event boundaries make these change
 | Priority/SLA | Formula, bands, deadlines, statuses | Service-specific SLA, dashboard SLA states, monitor scan |
 | Assignment | Three strategies, capacity filtering | Live strategy switch, recommendations |
 | Intelligence | Classification, similarity | Duplicate preview/links, suggested resolutions |
-| Reporting | — | Role-scoped dashboards, reports, filters, pagination |
-| Audit/notifications | — | Full workflow timeline, channel rows, read/unread |
+| Reporting | Not automated | Role-scoped dashboards, reports, filters, pagination |
+| Audit/notifications | Not automated | Full workflow timeline, channel rows, read/unread |
 | Persistence | Flyway/Testcontainers | Fresh seed, reset and restart |
 
 [TEST_CASES.md](TEST_CASES.md) documents 60+ test cases with preconditions, steps, expected results and
@@ -738,40 +740,22 @@ technician action flow.
 
 ## 10. Demonstration workflows
 
-The demo plan is in [DEMO_SCRIPT.md](DEMO_SCRIPT.md). The three required workflows are:
+The system supports the three end-to-end workflows required by the brief:
 
-1. **Report → triage → assignment → notification**
-   Employee reports a payment outage; the system auto-classifies it, calculates P1, attaches the
-   payment-specific SLA, detects a possible duplicate, assigns the best technician and notifies both
-   parties.
-2. **Investigate → resolve → verify → close**
-   Technician acknowledges, starts work, adds an internal note, resolves with notes; the reporter
-   verifies; the admin closes; feedback is captured; the audit timeline and notifications show every
-   step.
-3. **Correlation → SLA risk → escalation → reporting**
-   A similar payment report is linked as a duplicate; a breached/at-risk incident is visible on the
-   dashboard; the SLA monitor escalates an unacknowledged critical incident; the reports page shows
-   workload, service/category analysis and SLA health; the audit log shows the full history.
-
-The 15–20 minute video plan assigns each team member a module and a workflow segment.
+1. **Report → triage → assignment → notification:** an employee reports a payment outage; the
+   system auto-classifies it, calculates P1, attaches the payment-specific SLA, detects a possible
+   duplicate, assigns the best technician and notifies both parties.
+2. **Investigate → resolve → verify → close:** the technician acknowledges, starts work, adds an
+   internal note and resolves with notes; the reporter verifies; the admin closes; feedback is
+   captured; the audit timeline and notifications show every step.
+3. **Correlation → SLA risk → escalation → reporting:** a similar payment report is linked as a
+   duplicate; a breached or at-risk incident is visible on the dashboard; the SLA monitor escalates
+   an unacknowledged critical incident; the reports page shows workload, service/category analysis
+   and SLA health; the audit log shows the full history.
 
 ---
 
-## 11. Evaluation rubric mapping
-
-| Rubric criterion | Marks | Evidence |
-| --- | --- | --- |
-| System design & architecture | 10 | Modular architecture, state/strategy/observer/factory/repository patterns, documented diagrams |
-| Functionality implementation (MVP) | 60 | All mandatory modules: users, incidents, priority, assignment, SLA, notifications, audit, search/reporting, intelligence, persistence |
-| User experience | 10 | Role-specific responsive UI, dashboards, smart triage form, SLA clocks, admin screens |
-| Technical depth | 15 | Spring Security/JWT, JPA specifications, Testcontainers, event-driven notifications, optimistic locking, Flyway, reusable typed React architecture |
-| Testing & validation | 5 | 50 automated tests, 60+ documented cases, negative/boundary checks |
-| Innovation | 10 | Auto-classification, duplicate detection, technician recommendations, suggested resolutions, SLA risk detection, auto-escalation |
-| Documentation & presentation | 10 | README, architecture/UML, ER design, API reference, test catalogue, report and demo script |
-
----
-
-## 12. Limitations and future work
+## 11. Limitations and future work
 
 ### Current limitations
 
@@ -801,7 +785,7 @@ The 15–20 minute video plan assigns each team member a module and a workflow s
 
 ---
 
-## 13. Conclusion
+## 12. Conclusion
 
 I-ITSM demonstrates a complete, usable IT service management workflow rather than an isolated CRUD
 exercise. The design applies object-oriented principles to the parts of the problem where they matter:
@@ -809,12 +793,12 @@ the incident lifecycle is a state machine, priority and assignment are interchan
 notifications and audit are observers of domain events, and entities protect their own invariants.
 The system meets every mandatory MVP requirement and adds meaningful intelligent features, a polished
 role-specific interface and a substantial automated test suite. Its documentation covers architecture,
-UML, database design, API contracts, tests and a video demonstration plan, providing a strong basis
+UML, database design, API contracts and tests, providing a strong basis
 for evaluation and future extension.
 
 ---
 
-## 14. Appendices
+## 13. Appendices
 
 ### A. Demo accounts
 
@@ -824,6 +808,7 @@ for evaluation and future extension.
 | Technician | `priya@itsm.local` | `Tech@123` |
 | Technician | `rohan@itsm.local` | `Tech@123` |
 | Technician | `dev@itsm.local` | `Tech@123` |
+| Technician | `sara@itsm.local` | `Tech@123` |
 | Employee | `employee@itsm.local` | `Employee@123` |
 | Employee | `vikram@itsm.local` | `Employee@123` |
 
@@ -850,4 +835,3 @@ cd backend && DB_URL=jdbc:postgresql://localhost:5433/app ./mvnw spring-boot:run
 - [Database design](DATABASE.md)
 - [API reference](API.md)
 - [Test cases](TEST_CASES.md)
-- [Demo script](DEMO_SCRIPT.md)

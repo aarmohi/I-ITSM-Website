@@ -1,8 +1,8 @@
-# I-ITSM — Intelligent IT Service Management & Incident Resolution
+# I-ITSM: Intelligent IT Service Management & Incident Resolution
 
-A full-stack incident management platform built for the **CS F213 / MAC F212 Object-Oriented
-Programming** project. It covers the complete ITIL-style incident lifecycle — report, classify,
-prioritize, assign, investigate, resolve, verify, close — with role-based access, configurable
+A full-stack incident management platform built for the **MAC F212 Object-Oriented
+Programming** project. It covers the complete ITIL-style incident lifecycle (report, classify,
+prioritize, assign, investigate, resolve, verify, close) with role-based access, configurable
 SLAs, technician assignment strategies, notifications, audit history, reporting and intelligent
 triage.
 
@@ -32,9 +32,10 @@ case-sensitive.
 | Role | Email | Password | Best for |
 | --- | --- | --- | --- |
 | Administrator | `admin@itsm.local` | `Admin@123` | Organisation-wide queue, reports, users, SLA policies, settings, audit |
-| Technician | `priya@itsm.local` | `Tech@123` | Application / database / cloud incidents |
-| Technician | `rohan@itsm.local` | `Tech@123` | Network / security / authentication incidents |
-| Technician | `dev@itsm.local` | `Tech@123` | Application / authentication / network incidents |
+| Technician | `priya@itsm.local` | `Tech@123` | Application/database/cloud incidents |
+| Technician | `rohan@itsm.local` | `Tech@123` | Network/security/authentication incidents |
+| Technician | `dev@itsm.local` | `Tech@123` | Application/authentication/network incidents |
+| Technician | `sara@itsm.local` | `Tech@123` | Hardware/software/storage incidents |
 | Employee | `employee@itsm.local` | `Employee@123` | Reporting incidents and tracking progress |
 | Employee | `vikram@itsm.local` | `Employee@123` | Second reporter account |
 
@@ -106,10 +107,10 @@ make db-down     # stop PostgreSQL (data kept)
 
 | Project requirement | Implementation |
 | --- | --- |
-| Employee / Technician / Administrator accounts | JPA single-table inheritance (`User` → `Employee`, `Technician`, `Administrator`) with role-specific workspaces |
+| Employee/Technician/Administrator accounts | JPA single-table inheritance (`User` → `Employee`, `Technician`, `Administrator`) with role-specific workspaces |
 | Authentication & role-based authorization | Stateless JWT (JJWT), BCrypt passwords, Spring Security, `@PreAuthorize`, per-incident access checks |
 | Incident create, view, update, assign, resolve, close | Full REST API + role-aware React UI, including edit-before-assignment and admin priority override |
-| Impact / urgency / business criticality | Weighted priority engine with a documented score, rationale and configurable service criticality |
+| Impact/urgency/business criticality | Weighted priority engine with a documented score, rationale and configurable service criticality |
 | At least two assignment strategies | Skill-based, load-based and round-robin, selectable at runtime by an administrator |
 | SLA calculation, deadlines, violation detection | Global and service-specific policies, response/resolution targets, warning thresholds, scheduled monitor, breach flags |
 | At least two notification mechanisms | Persistent in-app notifications plus simulated email (stored and logged); both driven by domain events |
@@ -126,7 +127,7 @@ Detailed requirements traceability is in [docs/PROJECT_REPORT.md](docs/PROJECT_R
 ## Architecture at a glance
 
 ```text
-┌─────────────────────────────┐        HTTPS / JSON + JWT        ┌──────────────────────────────┐
+┌─────────────────────────────┐        HTTPS/JSON + JWT          ┌──────────────────────────────┐
 │ React 19 SPA                │ ───────────────────────────────▶ │ Spring Boot 4.1 API          │
 │ Vite dev server + proxy     │                                  │ Web MVC · Security · JPA     │
 │ Role-specific pages         │ ◀─────────────────────────────── │ Validation · Actuator        │
@@ -149,7 +150,7 @@ Key design choices:
 - **Factory pattern** for role-specific users, notification records and lifecycle state handlers.
 - **Repository pattern** via Spring Data JPA.
 - **Builder** for assembling realistic demo incidents.
-- **Encapsulation** — incident transitions, feedback and duplicate links go through domain methods;
+- **Encapsulation:** incident transitions, feedback and duplicate links go through domain methods;
   services enforce actor permissions and business rules.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component, class, use-case, sequence and state
@@ -161,7 +162,7 @@ diagrams.
 
 ```text
 raw   = impact(1–4) × urgency(1–4) × service criticality(1–4)
-bonus = 0 / +1 / +3 / +6 / +10 for 5 / 25 / 100 / 500 affected users
+bonus = 0/+1/+3/+6/+10 for 5/25/100/500 affected users
 score = raw + bonus
 P1 score ≥ 36 · P2 ≥ 18 · P3 ≥ 6 · P4 otherwise
 ```
@@ -210,7 +211,7 @@ SLA or Reports page.
 .
 ├── backend/
 │   ├── pom.xml
-│   ├── mvnw / mvnw.cmd
+│   ├── mvnw/mvnw.cmd
 │   └── src/
 │       ├── main/java/com/example/itsm/
 │       │   ├── common/          # base entity, errors, ProblemDetail, pagination
@@ -380,6 +381,6 @@ The seeder only runs when the `users` table is empty.
 
 ---
 
-**Course:** CS F213 / MAC F212 Object-Oriented Programming · Semester I, 2026–2027  
+**Course:** MAC F212 Object-Oriented Programming · Semester I, 2026–2027  
 **Project:** Intelligent IT Service Management & Incident Resolution System  
 **Built with:** Spring Boot + PostgreSQL + React (Vite)

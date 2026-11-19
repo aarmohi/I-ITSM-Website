@@ -44,7 +44,7 @@ The Testcontainers test requires a working Docker daemon; it starts a disposable
 
 ## 3. Manual API/UI validation performed
 
-The following were exercised against the running application with curl and Playwright:
+The following were exercised against the running application with curl and a headless Chrome browser:
 
 - Login/registration for all three roles; unauthorized requests return 401.
 - Employee creates incidents; auto-category, priority rationale, SLA deadlines and auto-assignment
@@ -177,6 +177,6 @@ invariant enforced in design.
 
 The project intentionally keeps external integrations simulated. There is no load/performance test,
 no email-provider integration test, and no browser automation committed to CI. The Testcontainers
-integration test provides a real database/API round trip, and the UI was validated with Playwright
+integration test provides a real database/API round trip, and the UI was checked in headless Chrome
 during development. These gaps are acceptable for the course scope and listed in the report's future
 work.
