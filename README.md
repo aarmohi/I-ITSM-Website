@@ -346,7 +346,6 @@ exceptions, authorization and business rules.
 - [REST API reference](docs/API.md)
 - [Test cases and evidence](docs/TEST_CASES.md)
 - [Project report (Markdown)](docs/PROJECT_REPORT.md) · [Project report (PDF)](docs/I-ITSM_Project_Report.pdf)
-- [Demo/video plan](docs/DEMO_SCRIPT.md)
 - [UI screenshots](docs/screenshots/)
 
 ## Security notes
