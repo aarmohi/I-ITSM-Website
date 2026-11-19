@@ -1,0 +1,261 @@
+/*
+ * Palette: neutral grey ground, near-black sidebar and accent (no blue tint) and muted status
+ * colours, with no glows or gradients, so it reads as a calm professional tool.
+ * Every text colour meets WCAG AA contrast on the surfaces it is used on.
+ * Dark mode redefines the same tokens; components only ever use the tokens.
+ * The token sets also apply to any element with data-theme, so a section can pin one theme:
+ * the sign-in page is always a dark brand panel beside a light form, whatever the app theme.
+ */
+:root,
+[data-theme='light'] {
+  --bg: #f4f4f3;
+  --surface: #ffffff;
+  --surface-soft: #f8f8f7;
+  --surface-raised: #ffffff;
+  --ink: #1c1d1f;
+  --ink-soft: #3f4246;
+  --muted: #616469;
+  --line: #e3e3e0;
+  --line-strong: #cfcfcb;
+  --accent: #1c1d1f;
+  --accent-strong: #000000;
+  --accent-soft: #ebebe9;
+  --on-accent: #ffffff;
+  --success: #2f6f4a;
+  --success-soft: #e8f1eb;
+  --warning: #85580f;
+  --warning-soft: #f6efe2;
+  --danger: #a33a2f;
+  --danger-soft: #f8eae8;
+  --info: #3b5b7a;
+  --info-soft: #ebf0f5;
+  --violet: #5b5478;
+  --violet-soft: #efeef4;
+  --star: #a87414;
+  --sidebar: #1a1b1d;
+  --sidebar-soft: #26272a;
+  --sidebar-line: rgba(255, 255, 255, 0.08);
+  --sidebar-ink: #ececeb;
+  --sidebar-muted: #a8aaad;
+  --overlay: rgba(20, 26, 34, 0.5);
+  --radius: 10px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(31, 35, 40, 0.06);
+  --shadow-lg: 0 12px 32px rgba(31, 35, 40, 0.12);
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #161617;
+    --surface: #1d1e20;
+    --surface-soft: #19191b;
+    --surface-raised: #242527;
+    --ink: #e8e8e6;
+    --ink-soft: #c6c7c5;
+    --muted: #9a9c9f;
+    --line: #2d2e31;
+    --line-strong: #3b3c40;
+    --accent: #e8e8e6;
+    --accent-strong: #ffffff;
+    --accent-soft: #2d2e31;
+    --on-accent: #161617;
+    --success: #86b99a;
+    --success-soft: #1d2b23;
+    --warning: #d0a560;
+    --warning-soft: #2e2618;
+    --danger: #e0948b;
+    --danger-soft: #35211f;
+    --info: #93acc6;
+    --info-soft: #1f2833;
+    --violet: #b3abcc;
+    --violet-soft: #29263a;
+    --star: #d0a560;
+    --sidebar: #111112;
+    --sidebar-soft: #1c1c1e;
+    --sidebar-ink: #e8e8e6;
+    --sidebar-muted: #9a9c9f;
+    --overlay: rgba(0, 0, 0, 0.6);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  --bg: #161617;
+  --surface: #1d1e20;
+  --surface-soft: #19191b;
+  --surface-raised: #242527;
+  --ink: #e8e8e6;
+  --ink-soft: #c6c7c5;
+  --muted: #9a9c9f;
+  --line: #2d2e31;
+  --line-strong: #3b3c40;
+  --accent: #e8e8e6;
+  --accent-strong: #ffffff;
+  --accent-soft: #2d2e31;
+  --on-accent: #161617;
+  --success: #86b99a;
+  --success-soft: #1d2b23;
+  --warning: #d0a560;
+  --warning-soft: #2e2618;
+  --danger: #e0948b;
+  --danger-soft: #35211f;
+  --info: #93acc6;
+  --info-soft: #1f2833;
+  --violet: #b3abcc;
+  --violet-soft: #29263a;
+  --star: #d0a560;
+  --sidebar: #111112;
+  --sidebar-soft: #1c1c1e;
+  --sidebar-ink: #e8e8e6;
+  --sidebar-muted: #9a9c9f;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100svh;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--surface-soft);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 10px 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+input:disabled,
+select:disabled {
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
