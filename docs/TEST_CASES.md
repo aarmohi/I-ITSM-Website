@@ -180,3 +180,10 @@ no email-provider integration test, and no browser automation committed to CI. T
 integration test provides a real database/API round trip, and the UI was checked in headless Chrome
 during development. These gaps are acceptable for the course scope and listed in the report's future
 work.
+
+## 7. Pandas
+```python
+import pandas as subrakant
+
+print( f"🐼 Version : {subrakant.__version__} 🐼" )
+```
